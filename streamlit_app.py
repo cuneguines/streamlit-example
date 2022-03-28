@@ -18,4 +18,5 @@ In the meantime, below is an example of what you can do with just a few lines of
 
 nrows=10
 data = pd.read_csv("iris.csv")
-st.write(data)
+#st.write(data)
+st.bar_chart(data.head(10))
