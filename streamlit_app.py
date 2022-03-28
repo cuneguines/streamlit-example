@@ -16,23 +16,27 @@ In the meantime, below is an example of what you can do with just a few lines of
 """
 
 
-with st.echo(code_location='below'):
-    total_points = st.slider("Number of points in spiral", 1, 5000, 2000)
-    num_turns = st.slider("Number of turns in spiral", 1, 100, 9)
+import pandas as pd
+import pandas_profiling
+import streamlit as st
 
-    Point = namedtuple('Point', 'x y')
-    data = []
+#from streamlit_gallery.utils import readme
+from streamlit_pandas_profiling import st_profile_report
+from streamlit_pandas_profiling import st_profile_report
+from pandas_profiling import ProfileReport
 
-    points_per_turn = total_points / num_turns
+# DATA_URL = () 
+nrows=10
+data = pd.read_csv("iris.csv")
+lowercase = lambda x: str(x).lower()
+data.rename(lowercase, axis='columns', inplace=True)
+#data[DATE_COLUMN] = pd.to_datetime(data[DATE_COLUMN])
 
-    for curr_point_num in range(total_points):
-        curr_turn, i = divmod(curr_point_num, points_per_turn)
-        angle = (curr_turn + 1) * 2 * math.pi * i / points_per_turn
-        radius = curr_point_num / total_points
-        x = radius * math.cos(angle)
-        y = radius * math.sin(angle)
-        data.append(Point(x, y))
+st.subheader('Raw data')
+st.write(data.head(10))
+st.bar_chart(data.head(10))
+pr = ProfileReport(data.head(5))
 
-    st.altair_chart(alt.Chart(pd.DataFrame(data), height=500, width=500)
-        .mark_circle(color='#0068c9', opacity=0.5)
-        .encode(x='x:Q', y='y:Q'))
+st_profile_report(pr)
+#print(data.dtypes)
+#print(data.head(10))
